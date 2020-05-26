@@ -11,6 +11,8 @@ Public Enum EEmployeeType
     None
     Common
     Contract
+    Inherit
+    Partnership
 End Enum
 
 Public Enum EStrategy
@@ -23,6 +25,7 @@ Public Enum EStrategy
     Instant
     InstantLasting
     Contract
+    Background
 End Enum
 
 Public Enum ERank
@@ -81,9 +84,9 @@ Public Class Card
         End Set
     End Property
     Private mType As ECardType
-    Public Shared SummonConditionName As String() = {"", "常规", "契约"}
+    Public Shared SummonConditionName As String() = {"", "常规", "契约", "继承", "合约"}
     Public HeroSummonCondition As EEmployeeType
-    Public Shared SpellTypeName As String() = {"", "常规", "持续", "单人", "反制", "反制|持续", "立即", "立即|持续", "契约"}
+    Public Shared SpellTypeName As String() = {"", "常规", "持续", "单人", "反制", "反制|持续", "立即", "立即|持续", "契约", "场地"}
     Public SpellType As EStrategy
     Public Shared RankName As String() = {"", "普通", "优质", "王牌"}
     Public Property Rank As ERank
@@ -137,14 +140,14 @@ Public Class Card
 
         Select Case mType
             Case ECardType.Employee
-                If HeroSummonCondition < 1 Or HeroSummonCondition > EEmployeeType.Contract Then
+                If HeroSummonCondition < 1 Or HeroSummonCondition > EEmployeeType.Partnership Then
                     Throw New Exception("未选择该雇员的上场方式~")
                 End If
                 If Rank = ERank.None Then
                     Throw New Exception("未选择卡片等级~")
                 End If
             Case ECardType.Strategy
-                If SpellType < 1 Or SpellType > EStrategy.Contract Then
+                If SpellType < 1 Or SpellType > EStrategy.Background Then
                     Throw New Exception("未选择该策略的类型~")
                 End If
                 If Rank = ERank.None Then

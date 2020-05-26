@@ -279,7 +279,7 @@ Public Class FrmMain
     Private Sub ButSaveAll_Click(sender As Object, e As EventArgs) Handles ButSaveAll.Click
         If Not FileIO.FileSystem.FileExists(CurrentFile) Then
             Dim sfd As New SaveFileDialog With {
-           .Filter = "Fair Deal Card Database(*.fdcdb)|*.fdcdb",
+           .Filter = "Fair Dealing Card Database(*.fdcdb)|*.fdcdb",
            .AddExtension = True,
            .InitialDirectory = Application.StartupPath,
            .RestoreDirectory = True
@@ -350,7 +350,7 @@ Public Class FrmMain
         LbxCards.SelectedIndex = -1
         Cards = New List(Of Card)
         Dim ofd As New OpenFileDialog With {
-            .Filter = "Fair Deal Card Database(*.fdcdb)|*.fdcdb",
+            .Filter = "Fair Dealing Card Database(*.fdcdb)|*.fdcdb",
             .InitialDirectory = Application.StartupPath,
             .RestoreDirectory = True
         }
@@ -392,11 +392,11 @@ Public Class FrmMain
                 CbxRank.SelectedIndex = CurrCard.Rank
                 CbxLimit.SelectedIndex = CurrCard.Limit
                 TempCamp = CurrCard.Camp
-                TempSeries = CurrCard.Series.Clone
+                TempSeries = CurrCard.Series
             End If
             TempPool = CurrCard.Pool
             TempEf = CurrCard.Effects
-            TempLabel = CurrCard.Labels.Clone
+            TempLabel = CurrCard.Labels
             TempDesc = CurrCard.Description
         End If
     End Sub
@@ -489,7 +489,7 @@ Public Class FrmMain
         Select Case e.Button
             Case Windows.Forms.MouseButtons.Left
                 Dim ofd As New OpenFileDialog With {
-                    .Filter = "The Soul Hunter Card Database(*.fdcdb)|*.fdcdb",
+                    .Filter = "Fair Dealing Card Database(*.fdcdb)|*.fdcdb",
                     .InitialDirectory = Application.StartupPath,
                     .RestoreDirectory = True
                 }
@@ -520,7 +520,7 @@ Public Class FrmMain
                 End If
             Case Windows.Forms.MouseButtons.Right
                 Dim ofd As New OpenFileDialog With {
-                    .Filter = "The Soul Hunter Card Database(*.fdcdb)|*.fdcdb",
+                    .Filter = "Fair Dealing Card Database(*.fdcdb)|*.fdcdb",
                     .InitialDirectory = Application.StartupPath,
                     .RestoreDirectory = True
                 }
@@ -553,7 +553,7 @@ Public Class FrmMain
                     cs.Add(one)
                 Next
                 Dim sfd As New SaveFileDialog With {
-                    .Filter = "The Soul Hunter Card Database(*.fdcdb)|*.fdcdb",
+                    .Filter = "Fair Dealing Card Database(*.fdcdb)|*.fdcdb",
                     .AddExtension = True,
                     .InitialDirectory = Application.StartupPath,
                     .RestoreDirectory = True
@@ -566,7 +566,7 @@ Public Class FrmMain
                     cs.Add(card)
                 Next
                 Dim sfd As New SaveFileDialog With {
-                    .Filter = "The Soul Hunter Card Database(*.fdcdb)|*.fdcdb",
+                    .Filter = "Fair Dealing Card Database(*.fdcdb)|*.fdcdb",
                     .AddExtension = True,
                     .InitialDirectory = Application.StartupPath,
                     .RestoreDirectory = True
@@ -593,12 +593,30 @@ Public Class FrmMain
             Dim j As New JObject()
             j.Add("id", c.ID)
             j.Add("name", c.Name)
+            j.Add("type", c.Type)
+            Select Case c.Type
+                Case ECardType.Employee
+                    j.Add("subtype", c.HeroSummonCondition)
+                    j.Add("atk_eff", c.ATK_EFF)
+                    j.Add("def_hp", c.DEF)
+                Case ECardType.Strategy
+                    j.Add("subtype", c.SpellType)
+                    j.Add("atk_eff", c.ATK_EFF)
+                    j.Add("def_hp", 0)
+            End Select
             j.Add("rank", c.Rank - 1)
+            j.Add("effect", c.Effects)
             Dim l As Integer = 3 - c.Limit
             If c.Rank = ERank.Trump Then l = 1
             If c.Limit >= ELimit.Forbidden Then l = 0
             j.Add("limit", l)
             j.Add("pool", 1)
+            j.Add("strong", c.Labels.Contains(40))
+            Dim ss = New JArray()
+            For Each s In c.Series
+                ss.Add(s)
+            Next
+            j.Add("series", ss)
             ja.Add(j)
         Next
         Dim fs As New FileStream("fxxk.txt", FileMode.Create)
