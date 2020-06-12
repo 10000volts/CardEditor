@@ -153,6 +153,7 @@ Public Class Card
             Case Else
                 Return ""
         End Select
+        If res = "" Then Return ""
         Return Mid(res, 1, res.Length - 1)
     End Function
     Public Sub CheckValid()

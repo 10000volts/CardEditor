@@ -449,9 +449,9 @@ Public Class FrmMain
                                                 End If
                                             End If
                                             If CbxType.SelectedIndex = ECardType.Employee Then
-                                                If (Val(TxtSpecies.Text) And cc.HeroSummonCondition) = 0 Then Return False
+                                                If (Val(TxtSpecies.Text) And cc.HeroSummonCondition) <> Val(TxtSpecies.Text) Then Return False
                                             ElseIf CbxType.SelectedIndex = ECardType.Strategy Then
-                                                If (Val(TxtSpecies.Text) And cc.SpellType) = 0 Then Return False
+                                                If (Val(TxtSpecies.Text) And cc.SpellType) <> Val(TxtSpecies.Text) Then Return False
                                             End If
                                             Return True
                                         End Function))
