@@ -30,7 +30,8 @@ Public Class FrmMain
 
     Private Sub FrmMain_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         HeroSpellControls.Add(lblSpecies)
-        HeroSpellControls.Add(CbxSpecies)
+        HeroSpellControls.Add(TxtSpecies)
+        HeroSpellControls.Add(LblSpeciesHint)
         HeroSpellControls.Add(lblRarity)
         HeroSpellControls.Add(CbxRank)
         HeroSpellControls.Add(lblRank)
@@ -82,7 +83,7 @@ Public Class FrmMain
                 For Each one In HeroSpellControls
                     one.Visible = True
                 Next
-                CbxSpecies.Items.Clear()
+                TxtSpecies.Text = ""
             Case 1 ' 领袖
                 For Each one In HeroSpellControls
                     one.Visible = False
@@ -91,20 +92,14 @@ Public Class FrmMain
                 For Each one In HeroSpellControls
                     one.Visible = True
                 Next
-                CbxSpecies.Items.Clear()
-                For Each one In Card.SummonConditionName
-                    CbxSpecies.Items.Add(one)
-                Next
+                TxtSpecies.Text = ""
             Case 3 ' 策略
                 For Each one In HeroSpellControls
                     one.Visible = True
                 Next
                 lblDef.Visible = False
                 TxtDef.Visible = False
-                CbxSpecies.Items.Clear()
-                For Each one In Card.SpellTypeName
-                    CbxSpecies.Items.Add(one)
-                Next
+                TxtSpecies.Text = ""
             Case Else
                 For Each one In HeroSpellControls
                     one.Visible = False
@@ -117,15 +112,15 @@ Public Class FrmMain
         c.Type = CbxType.SelectedIndex
         If c.Type = ECardType.Employee Or c.Type = ECardType.Strategy Then
             If c.Type = ECardType.Employee Then
-                c.HeroSummonCondition = CbxSpecies.SelectedIndex
+                c.HeroSummonCondition = Val(TxtSpecies.Text)
             ElseIf c.Type = ECardType.Strategy Then
-                c.SpellType = CbxSpecies.SelectedIndex
+                c.SpellType = Val(TxtSpecies.Text)
             End If
             c.Rank = CbxRank.SelectedIndex
             If CbxLimit.SelectedIndex <= 0 Then CbxLimit.SelectedIndex = 1
             c.Limit = CbxLimit.SelectedIndex
             c.Camp = TempCamp
-            c.Series = TempSeries
+            c.Series = TempSeries.Clone()
             c.ATK_EFF = Val(TxtAtk.Text)
             If c.Type = ECardType.Employee Then
                 c.DEF = Val(TxtDef.Text)
@@ -199,7 +194,7 @@ Public Class FrmMain
         Next
         TxtName.Text = ""
         TxtID.Text = ""
-        CbxSpecies.SelectedIndex = -1
+        TxtSpecies.Text = ""
         CbxType.SelectedIndex = -1
     End Sub
     Private Sub ButClear_Click(sender As Object, e As EventArgs) Handles ButClear.Click
@@ -261,9 +256,6 @@ Public Class FrmMain
         Try
             Dim content As String = ""
             For Each card In cs
-                If download Then
-
-                End If
                 content &= card.Serialize() & "#"
             Next
             content = Mid(content, 1, content.Length - 1)
@@ -381,11 +373,11 @@ Public Class FrmMain
             CbxType.SelectedIndex = CurrCard.Type
             Select Case CurrCard.Type
                 Case ECardType.Employee
-                    CbxSpecies.SelectedIndex = CurrCard.HeroSummonCondition
+                    TxtSpecies.Text = CurrCard.HeroSummonCondition.ToString()
                     TxtAtk.Text = CurrCard.ATK_EFF
                     TxtDef.Text = CurrCard.DEF
                 Case ECardType.Strategy
-                    CbxSpecies.SelectedIndex = CurrCard.SpellType
+                    TxtSpecies.Text = CurrCard.SpellType.ToString()
                     TxtAtk.Text = CurrCard.ATK_EFF
             End Select
             If CurrCard.Type = ECardType.Employee Or CurrCard.Type = ECardType.Strategy Then
@@ -457,11 +449,9 @@ Public Class FrmMain
                                                 End If
                                             End If
                                             If CbxType.SelectedIndex = ECardType.Employee Then
-                                                If CbxSpecies.SelectedIndex > EEmployeeType.None And CbxSpecies.SelectedIndex <>
-                                                    cc.HeroSummonCondition Then Return False
+                                                If (Val(TxtSpecies.Text) And cc.HeroSummonCondition) = 0 Then Return False
                                             ElseIf CbxType.SelectedIndex = ECardType.Strategy Then
-                                                If CbxSpecies.SelectedIndex > EStrategy.None And CbxSpecies.SelectedIndex <>
-                                                    cc.SpellType Then Return False
+                                                If (Val(TxtSpecies.Text) And cc.SpellType) = 0 Then Return False
                                             End If
                                             Return True
                                         End Function))
@@ -645,7 +635,7 @@ Public Class FrmMain
         End Select
     End Sub
 
-    Private Sub LblForbiddenGroup_Click(sender As Object, e As EventArgs) Handles LblForbiddenGroup.Click
-
+    Private Sub TxtSpcies_TextChanged(sender As Object, e As EventArgs) Handles TxtSpecies.TextChanged
+        LblSpeciesHint.Text = Card.GetSubtype(CbxType.SelectedIndex, Val(TxtSpecies.Text))
     End Sub
 End Class

@@ -11,21 +11,20 @@ Public Enum EEmployeeType
     None
     Common
     Contract
-    Inherit
-    Partnership
+    Inherit = 4
+    Partnership = 8
+    Secret = 16
 End Enum
 
 Public Enum EStrategy
     None
     Common
     Lasting
-    Attachment
-    Counter
-    CounterLasting
-    Instant
-    InstantLasting
-    Contract
-    Background
+    Attachment = 4
+    Counter = 8
+    CounterLasting = 10
+    Contract = 16
+    Background = 32
 End Enum
 
 Public Enum ERank
@@ -84,10 +83,10 @@ Public Class Card
         End Set
     End Property
     Private mType As ECardType
-    Public Shared SummonConditionName As String() = {"", "常规", "契约", "继承", "合约"}
-    Public HeroSummonCondition As EEmployeeType
-    Public Shared SpellTypeName As String() = {"", "常规", "持续", "单人", "反制", "反制|持续", "立即", "立即|持续", "契约", "场地"}
-    Public SpellType As EStrategy
+    Public Shared SummonConditionName As String() = {"", "常规", "契约", "继承", "合约", "秘密"}
+    Public HeroSummonCondition As Integer
+    Public Shared SpellTypeName As String() = {"", "常规", "持续", "单人", "反制", "契约", "场地"}
+    Public SpellType As Integer
     Public Shared RankName As String() = {"", "普通", "优质", "王牌"}
     Public Property Rank As ERank
         Get
@@ -133,6 +132,29 @@ Public Class Card
     Public Series As List(Of String)
     Public Description As String
 
+    Public Shared Function GetSubtype(t As ECardType, st As Integer) As String
+        Dim res As String = ""
+        If st = 0 Then Return ""
+        Select Case t
+            Case ECardType.Employee
+                Dim l = UBound(SummonConditionName) - 1
+                For i = 0 To l
+                    If (st And 2 ^ i) > 0 Then
+                        res += SummonConditionName(i + 1) + "|"
+                    End If
+                Next
+            Case ECardType.Strategy
+                Dim l = UBound(SpellTypeName) - 1
+                For i = 0 To l
+                    If (st And 2 ^ i) > 0 Then
+                        res += SpellTypeName(i + 1) + "|"
+                    End If
+                Next
+            Case Else
+                Return ""
+        End Select
+        Return Mid(res, 1, res.Length - 1)
+    End Function
     Public Sub CheckValid()
         If mType = ECardType.None Then
             Throw New Exception("未选择卡片种类~")
@@ -140,14 +162,14 @@ Public Class Card
 
         Select Case mType
             Case ECardType.Employee
-                If HeroSummonCondition < 1 Or HeroSummonCondition > EEmployeeType.Partnership Then
+                If HeroSummonCondition < 1 Then
                     Throw New Exception("未选择该雇员的上场方式~")
                 End If
                 If Rank = ERank.None Then
                     Throw New Exception("未选择卡片等级~")
                 End If
             Case ECardType.Strategy
-                If SpellType < 1 Or SpellType > EStrategy.Background Then
+                If SpellType < 1 Then
                     Throw New Exception("未选择该策略的类型~")
                 End If
                 If Rank = ERank.None Then
@@ -168,6 +190,26 @@ Public Class Card
         End Select
         Return RankName(Rank) + " " + prefix + Name + IIf(Official, "(官方)", "")
     End Function
+    Private Shared empT As Dictionary(Of Integer, Integer)
+    Private Shared straT As Dictionary(Of Integer, Integer)
+    Shared Sub New()
+        empT = New Dictionary(Of Integer, Integer)
+        straT = New Dictionary(Of Integer, Integer)
+        empT(0) = 0
+        empT(1) = 1
+        empT(2) = 2
+        empT(3) = 4
+        empT(4) = 8
+        empT(5) = 16
+        straT(0) = 0
+        straT(1) = 1
+        straT(2) = 2
+        straT(3) = 4
+        straT(4) = 8
+        straT(5) = 10
+        straT(8) = 16
+        straT(9) = 32
+    End Sub
     Public Function Serialize() As String
         Dim r As String = mOfficial.ToString() + "|" + m_ID.ToString() + "|" +
             mName + "|" + Pool + "|" +
@@ -189,9 +231,11 @@ Public Class Card
             End If
             r += "|"
             If mType = ECardType.Employee Then
-                r += CInt(HeroSummonCondition).ToString() + "|" + ATK_EFF.ToString() + "|" + DEF.ToString() + "|"
+                r += HeroSummonCondition.ToString() + "|" + ATK_EFF.ToString() + "|" + DEF.ToString() + "|"
+                ' r += empT(HeroSummonCondition).ToString() + "|" + ATK_EFF.ToString() + "|" + DEF.ToString() + "|"
             ElseIf mType = ECardType.Strategy Then
-                r += CInt(SpellType).ToString() + "|" + ATK_EFF.ToString() + "|"
+                r += SpellType.ToString() + "|" + ATK_EFF.ToString() + "|"
+                ' r += straT(SpellType).ToString() + "|" + ATK_EFF.ToString() + "|"
             End If
         End If
         If Labels IsNot Nothing AndAlso Labels.Count > 0 Then

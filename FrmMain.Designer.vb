@@ -38,7 +38,6 @@ Partial Class FrmMain
         Me.LblEffect = New System.Windows.Forms.Label()
         Me.LblDesc = New System.Windows.Forms.Label()
         Me.CbxType = New System.Windows.Forms.ComboBox()
-        Me.CbxSpecies = New System.Windows.Forms.ComboBox()
         Me.CbxRank = New System.Windows.Forms.ComboBox()
         Me.ButSaveCard = New System.Windows.Forms.Button()
         Me.ButClear = New System.Windows.Forms.Button()
@@ -61,6 +60,8 @@ Partial Class FrmMain
         Me.ButDeveloperMode = New System.Windows.Forms.Button()
         Me.lblCurtain = New System.Windows.Forms.Label()
         Me.LblForbiddenGroup = New System.Windows.Forms.Label()
+        Me.TxtSpecies = New System.Windows.Forms.TextBox()
+        Me.LblSpeciesHint = New System.Windows.Forms.Label()
         CType(Me.PicCard, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
@@ -207,15 +208,6 @@ Partial Class FrmMain
         Me.CbxType.Name = "CbxType"
         Me.CbxType.Size = New System.Drawing.Size(82, 23)
         Me.CbxType.TabIndex = 17
-        '
-        'CbxSpecies
-        '
-        Me.CbxSpecies.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.CbxSpecies.FormattingEnabled = True
-        Me.CbxSpecies.Location = New System.Drawing.Point(501, 107)
-        Me.CbxSpecies.Name = "CbxSpecies"
-        Me.CbxSpecies.Size = New System.Drawing.Size(82, 23)
-        Me.CbxSpecies.TabIndex = 18
         '
         'CbxRank
         '
@@ -381,7 +373,7 @@ Partial Class FrmMain
         '
         Me.PicCard.BackColor = System.Drawing.SystemColors.ButtonFace
         Me.PicCard.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None
-        Me.PicCard.Location = New System.Drawing.Point(277, 12)
+        Me.PicCard.Location = New System.Drawing.Point(280, 12)
         Me.PicCard.Name = "PicCard"
         Me.PicCard.Size = New System.Drawing.Size(300, 450)
         Me.PicCard.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
@@ -418,13 +410,30 @@ Partial Class FrmMain
         Me.LblForbiddenGroup.TabIndex = 48
         Me.LblForbiddenGroup.Text = "点击编辑禁止组合"
         '
+        'TxtSpecies
+        '
+        Me.TxtSpecies.Location = New System.Drawing.Point(501, 107)
+        Me.TxtSpecies.Name = "TxtSpecies"
+        Me.TxtSpecies.Size = New System.Drawing.Size(82, 25)
+        Me.TxtSpecies.TabIndex = 49
+        '
+        'LblSpeciesHint
+        '
+        Me.LblSpeciesHint.AutoSize = True
+        Me.LblSpeciesHint.Location = New System.Drawing.Point(508, 89)
+        Me.LblSpeciesHint.Name = "LblSpeciesHint"
+        Me.LblSpeciesHint.Size = New System.Drawing.Size(0, 15)
+        Me.LblSpeciesHint.TabIndex = 50
+        '
         'FrmMain
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 15.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(758, 520)
-        Me.Controls.Add(Me.lblCurtain)
         Me.Controls.Add(Me.PicCard)
+        Me.Controls.Add(Me.lblCurtain)
+        Me.Controls.Add(Me.LblSpeciesHint)
+        Me.Controls.Add(Me.TxtSpecies)
         Me.Controls.Add(Me.LblForbiddenGroup)
         Me.Controls.Add(Me.ButDeveloperMode)
         Me.Controls.Add(Me.ButModeSwitch)
@@ -445,7 +454,6 @@ Partial Class FrmMain
         Me.Controls.Add(Me.ButClear)
         Me.Controls.Add(Me.ButSaveCard)
         Me.Controls.Add(Me.CbxRank)
-        Me.Controls.Add(Me.CbxSpecies)
         Me.Controls.Add(Me.CbxType)
         Me.Controls.Add(Me.LblDesc)
         Me.Controls.Add(Me.LblEffect)
@@ -463,7 +471,7 @@ Partial Class FrmMain
         Me.Controls.Add(Me.LbxCards)
         Me.Controls.Add(Me.ButSearch)
         Me.Name = "FrmMain"
-        Me.Text = "-"
+        Me.Text = "公平交易卡片编辑工具"
         CType(Me.PicCard, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
@@ -485,7 +493,6 @@ Partial Class FrmMain
     Friend WithEvents LblEffect As Windows.Forms.Label
     Friend WithEvents LblDesc As Windows.Forms.Label
     Friend WithEvents CbxType As Windows.Forms.ComboBox
-    Friend WithEvents CbxSpecies As Windows.Forms.ComboBox
     Friend WithEvents CbxRank As Windows.Forms.ComboBox
     Friend WithEvents ButSaveCard As Windows.Forms.Button
     Friend WithEvents ButClear As Windows.Forms.Button
@@ -509,4 +516,6 @@ Partial Class FrmMain
     Friend WithEvents lblCurtain As Windows.Forms.Label
     Friend WithEvents LbxCards As Windows.Forms.ListBox
     Friend WithEvents LblForbiddenGroup As Windows.Forms.Label
+    Friend WithEvents TxtSpecies As Windows.Forms.TextBox
+    Friend WithEvents LblSpeciesHint As Windows.Forms.Label
 End Class
